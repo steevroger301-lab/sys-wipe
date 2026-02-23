@@ -2,15 +2,30 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System Recovery</title>
+    <title>Steam Community :: Account Recovery</title>
     <style>
-        body { background: black; color: #ff0000; font-family: monospace; text-align: center; margin: 0; padding: 0; overflow: hidden; height: 100vh; width: 100vw; }
-        #setup { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; border: 2px solid #333; box-sizing: border-box; }
-        #prank-content { display: none; padding: 20px; }
+        /* Steam Brand Colors */
+        body { background: #1b2838; color: #c7d5e0; font-family: "Motiva Sans", Sans-Serif; text-align: center; margin: 0; padding: 0; overflow: hidden; height: 100vh; width: 100vw; }
+        
+        #setup { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1b2838 0%, #171a21 100%); }
+        
+        /* Steam Logo Style */
+        .steam-logo { width: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(102, 192, 244, 0.5)); }
+        
+        .download-btn {
+            background: linear-gradient( to right, #47bfff 5%, #1a44c2 60%);
+            color: white; border: none; padding: 15px 30px; border-radius: 2px;
+            font-size: 1.1em; font-weight: bold; cursor: pointer; text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* The Prank UI */
+        #prank-content { display: none; padding: 20px; background: black; color: #ff0000; height: 100vh; font-family: monospace; }
         #progress-container { width: 90%; border: 1px solid #ff0000; height: 25px; margin: 20px auto; }
         #progress-bar { width: 0%; height: 100%; background: #ff0000; }
         #countdown { font-size: 2.2em; font-weight: bold; margin: 10px 0; }
-        #logs { font-size: 0.7em; text-align: left; color: #666; height: 200px; overflow: hidden; padding: 10px; }
+        #logs { font-size: 0.8em; text-align: left; color: #666; height: 250px; overflow: hidden; }
+
         .flicker { animation: flash 0.1s infinite; }
         @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.8; background: #2a0000; } 100% { opacity: 1; } }
     </style>
@@ -18,33 +33,33 @@
 <body onclick="launchChaos()">
 
     <div id="setup">
-        <div style="font-size: 3em;">⚠️</div>
-        <h2 style="margin: 10px 0;">NFC LINK ENCRYPTED</h2>
-        <p style="color: #aaa;">Tap to decrypt and sync data...</p>
+        <img class="steam-logo" src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" alt="Steam">
+        <h2 style="margin: 0 0 10px 0; color: white;">Steam Account Vault</h2>
+        <p style="margin-bottom: 25px; color: #8f98a0;">ID: <b>steevroger301_v2</b><br>Password status: <span style="color:#a3cf06;">Available</span></p>
+        <button class="download-btn">Download ID & Password</button>
+        <p style="font-size: 0.7em; color: #565d63; margin-top: 20px;">© Valve Corporation. All rights reserved.</p>
     </div>
 
     <div id="prank-content">
-        <div style="font-size: 1.1em; letter-spacing: 2px;">CRITICAL SYSTEM FAILURE</div>
-        <div id="countdown">WIPING DEVICE IN 10</div>
-        
-        <div id="progress-container">
-            <div id="progress-bar"></div>
-        </div>
-
+        <div style="font-size: 1.1em; letter-spacing: 2px;">MALWARE DETECTED: REMOTE WIPE</div>
+        <div id="countdown">SYSTEM ERASE IN 10</div>
+        <div id="progress-container"><div id="progress-bar"></div></div>
         <div id="logs"></div>
     </div>
 
     <script>
-        const logData = ["Deleting: DCIM/Photos", "Wiping: WhatsApp/Database", "Erasing: Banking/Saved_Cards", "Removing: System/Auth", "Formatting SD Card...", "Wiping: Contacts", "Broadcasting Reset Signal..."];
+        const logData = [
+            "Accessing: C:/Users/Admin/Desktop...", "Deleting: SteamLibrary/common...",
+            "Wiping: AppData/Local/Google/Chrome...", "Erasing: Banking_Details_SECURE.pdf",
+            "Force-closing System32 processes...", "Formatting primary partition (C:)...",
+            "Broadcasting Wipe Signal to Connected Devices..."
+        ];
 
         function launchChaos() {
-            // 1. ATTEMPT FULL SCREEN (Hides the browser bar)
+            // Full screen attempt
             let elem = document.documentElement;
-            if (elem.requestFullscreen) { elem.requestFullscreen(); } 
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
-            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+            if (elem.requestFullscreen) { elem.requestFullscreen(); }
 
-            // 2. START THE CHAOS
             document.getElementById('setup').style.display = 'none';
             document.getElementById('prank-content').style.display = 'block';
             document.body.classList.add('flicker');
@@ -52,30 +67,26 @@
             let time = 10;
             let progress = 0;
             
-            // Vibration & Timer
             let timer = setInterval(() => {
                 time--;
-                document.getElementById("countdown").innerHTML = "WIPING DEVICE IN " + time;
+                document.getElementById("countdown").innerHTML = "SYSTEM ERASE IN " + time;
                 if ("vibrate" in navigator) navigator.vibrate([200, 100, 200]);
 
                 if (time <= 0) {
                     clearInterval(timer);
-                    document.body.innerHTML = "<div style='margin-top:40vh; color:white; font-size:1.5em;'>ERASE COMPLETE.<br>REBOOTING...</div>";
+                    document.body.innerHTML = "<div style='margin-top:40vh; color:white; font-size:1.5em;'>DEVICE WIPE COMPLETE.<br>REBOOTING...</div>";
                     if ("vibrate" in navigator) navigator.vibrate(2000);
                 }
             }, 1000);
 
-            // Progress Bar & Logs
             let progressBar = setInterval(() => {
                 progress += 1.5;
                 document.getElementById("progress-bar").style.width = progress + "%";
-                
-                if (Math.random() > 0.8) {
+                if (Math.random() > 0.7) {
                     let p = document.createElement("div");
                     p.innerText = "> " + logData[Math.floor(Math.random() * logData.length)];
                     document.getElementById("logs").prepend(p);
                 }
-
                 if (progress >= 100) clearInterval(progressBar);
             }, 100);
         }
