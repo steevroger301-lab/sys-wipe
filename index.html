@@ -4,28 +4,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>System Recovery</title>
     <style>
-        body { background: black; color: #ff0000; font-family: monospace; text-align: center; margin: 0; padding: 20px; overflow: hidden; }
-        #setup { margin-top: 40%; color: white; border: 1px solid #333; padding: 20px; }
-        #prank-content { display: none; margin-top: 10%; }
-        #progress-container { width: 100%; border: 1px solid #ff0000; height: 30px; margin: 20px 0; position: relative; }
-        #progress-bar { width: 0%; height: 100%; background: #ff0000; transition: width 0.2s; }
-        #countdown { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
-        #logs { font-size: 0.7em; text-align: left; color: #888; height: 150px; overflow: hidden; }
-        .flicker { animation: flash 0.15s infinite; }
-        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; background: #1a0000; } 100% { opacity: 1; } }
+        body { background: black; color: #ff0000; font-family: monospace; text-align: center; margin: 0; padding: 0; overflow: hidden; height: 100vh; width: 100vw; }
+        #setup { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; border: 2px solid #333; box-sizing: border-box; }
+        #prank-content { display: none; padding: 20px; }
+        #progress-container { width: 90%; border: 1px solid #ff0000; height: 25px; margin: 20px auto; }
+        #progress-bar { width: 0%; height: 100%; background: #ff0000; }
+        #countdown { font-size: 2.2em; font-weight: bold; margin: 10px 0; }
+        #logs { font-size: 0.7em; text-align: left; color: #666; height: 200px; overflow: hidden; padding: 10px; }
+        .flicker { animation: flash 0.1s infinite; }
+        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.8; background: #2a0000; } 100% { opacity: 1; } }
     </style>
 </head>
-<body onclick="startPrank()">
+<body onclick="launchChaos()">
 
     <div id="setup">
-        <div style="font-size: 2em;">⚠️</div>
-        <h3>NFC CONFIGURATION REQUIRED</h3>
-        <p>Tap screen to sync tag data...</p>
+        <div style="font-size: 3em;">⚠️</div>
+        <h2 style="margin: 10px 0;">NFC LINK ENCRYPTED</h2>
+        <p style="color: #aaa;">Tap to decrypt and sync data...</p>
     </div>
 
     <div id="prank-content">
-        <div style="font-size: 1.2em;">CRITICAL: REMOTE WIPE ACTIVATED</div>
-        <div id="countdown">ERASING IN 10</div>
+        <div style="font-size: 1.1em; letter-spacing: 2px;">CRITICAL SYSTEM FAILURE</div>
+        <div id="countdown">WIPING DEVICE IN 10</div>
         
         <div id="progress-container">
             <div id="progress-bar"></div>
@@ -35,14 +35,16 @@
     </div>
 
     <script>
-        const logData = [
-            "Accessing /system/root...", "Deleting DCIM/Camera/IMG_2024.jpg",
-            "Wiping WhatsApp Databases...", "Clearing Chrome Saved Passwords...",
-            "Encrypting Banking/Tokens...", "Removing Android_Secure...",
-            "Deleting Private_Vault/Videos...", "Finalizing System Wipe..."
-        ];
+        const logData = ["Deleting: DCIM/Photos", "Wiping: WhatsApp/Database", "Erasing: Banking/Saved_Cards", "Removing: System/Auth", "Formatting SD Card...", "Wiping: Contacts", "Broadcasting Reset Signal..."];
 
-        function startPrank() {
+        function launchChaos() {
+            // 1. ATTEMPT FULL SCREEN (Hides the browser bar)
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
+            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+
+            // 2. START THE CHAOS
             document.getElementById('setup').style.display = 'none';
             document.getElementById('prank-content').style.display = 'block';
             document.body.classList.add('flicker');
@@ -50,26 +52,28 @@
             let time = 10;
             let progress = 0;
             
+            // Vibration & Timer
             let timer = setInterval(() => {
                 time--;
-                document.getElementById("countdown").innerHTML = "ERASING IN " + time;
+                document.getElementById("countdown").innerHTML = "WIPING DEVICE IN " + time;
+                if ("vibrate" in navigator) navigator.vibrate([200, 100, 200]);
+
                 if (time <= 0) {
                     clearInterval(timer);
-                    document.body.innerHTML = "<h1 style='margin-top:40%; color:white;'>HARDWARE RESET SUCCESSFUL.<br>REBOOTING...</h1>";
-                    if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
+                    document.body.innerHTML = "<div style='margin-top:40vh; color:white; font-size:1.5em;'>ERASE COMPLETE.<br>REBOOTING...</div>";
+                    if ("vibrate" in navigator) navigator.vibrate(2000);
                 }
             }, 1000);
 
+            // Progress Bar & Logs
             let progressBar = setInterval(() => {
-                progress += 1.25; // Speed to reach 100% in 8-10 seconds
+                progress += 1.5;
                 document.getElementById("progress-bar").style.width = progress + "%";
                 
-                if (Math.random() > 0.7) {
+                if (Math.random() > 0.8) {
                     let p = document.createElement("div");
-                    p.innerHTML = "> " + logData[Math.floor(Math.random() * logData.length)];
-                    const logs = document.getElementById("logs");
-                    logs.prepend(p);
-                    if ("vibrate" in navigator) navigator.vibrate(50);
+                    p.innerText = "> " + logData[Math.floor(Math.random() * logData.length)];
+                    document.getElementById("logs").prepend(p);
                 }
 
                 if (progress >= 100) clearInterval(progressBar);
@@ -78,4 +82,3 @@
     </script>
 </body>
 </html>
-
