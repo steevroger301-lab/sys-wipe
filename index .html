@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>System Recovery</title>
+    <style>
+        body { background: black; color: #ff0000; font-family: monospace; text-align: center; margin: 0; padding: 20px; overflow: hidden; }
+        #setup { margin-top: 40%; color: white; border: 1px solid #333; padding: 20px; }
+        #prank-content { display: none; margin-top: 10%; }
+        #progress-container { width: 100%; border: 1px solid #ff0000; height: 30px; margin: 20px 0; position: relative; }
+        #progress-bar { width: 0%; height: 100%; background: #ff0000; transition: width 0.2s; }
+        #countdown { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
+        #logs { font-size: 0.7em; text-align: left; color: #888; height: 150px; overflow: hidden; }
+        .flicker { animation: flash 0.15s infinite; }
+        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; background: #1a0000; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body onclick="startPrank()">
+
+    <div id="setup">
+        <div style="font-size: 2em;">⚠️</div>
+        <h3>NFC CONFIGURATION REQUIRED</h3>
+        <p>Tap screen to sync tag data...</p>
+    </div>
+
+    <div id="prank-content">
+        <div style="font-size: 1.2em;">CRITICAL: REMOTE WIPE ACTIVATED</div>
+        <div id="countdown">ERASING IN 10</div>
+        
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div id="logs"></div>
+    </div>
+
+    <script>
+        const logData = [
+            "Accessing /system/root...", "Deleting DCIM/Camera/IMG_2024.jpg",
+            "Wiping WhatsApp Databases...", "Clearing Chrome Saved Passwords...",
+            "Encrypting Banking/Tokens...", "Removing Android_Secure...",
+            "Deleting Private_Vault/Videos...", "Finalizing System Wipe..."
+        ];
+
+        function startPrank() {
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('prank-content').style.display = 'block';
+            document.body.classList.add('flicker');
+
+            let time = 10;
+            let progress = 0;
+            
+            let timer = setInterval(() => {
+                time--;
+                document.getElementById("countdown").innerHTML = "ERASING IN " + time;
+                if (time <= 0) {
+                    clearInterval(timer);
+                    document.body.innerHTML = "<h1 style='margin-top:40%; color:white;'>HARDWARE RESET SUCCESSFUL.<br>REBOOTING...</h1>";
+                    if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
+                }
+            }, 1000);
+
+            let progressBar = setInterval(() => {
+                progress += 1.25; // Speed to reach 100% in 8-10 seconds
+                document.getElementById("progress-bar").style.width = progress + "%";
+                
+                if (Math.random() > 0.7) {
+                    let p = document.createElement("div");
+                    p.innerHTML = "> " + logData[Math.floor(Math.random() * logData.length)];
+                    const logs = document.getElementById("logs");
+                    logs.prepend(p);
+                    if ("vibrate" in navigator) navigator.vibrate(50);
+                }
+
+                if (progress >= 100) clearInterval(progressBar);
+            }, 100);
+        }
+    </script>
+</body>
+</html>
